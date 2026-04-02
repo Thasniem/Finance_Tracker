@@ -22,33 +22,39 @@ def create_transaction(
     role: str = Depends(get_role),
     db: Session = Depends(get_db)
 ):
-    """
-    Create a new transaction for a user.
-    Accessible by Admin and Analyst roles.
-    """
     require_analyst_or_admin(role)
     return crud.create_transaction(db, txn, user_id)
 
 
-# ================= GET (FILTERED) =================
+# ================= GET (FILTERED LIST) =================
 @router.get("/", response_model=list[schemas.TransactionResponse])
 def get_transactions(
-    type: str | None = Query(None, description="Transaction type (income/expense)"),
-    category: str | None = Query(None, description="Transaction category"),
+    type: str | None = Query(None),
+    category: str | None = Query(None),
     start_date: date | None = Query(None),
     end_date: date | None = Query(None),
     role: str = Depends(get_role),
     db: Session = Depends(get_db)
 ):
-    """
-    Fetch transactions with optional filters:
-    - type
-    - category
-    - date range
-    Accessible by all roles.
-    """
     require_any_role(role)
     return crud.get_transactions(db, type, category, start_date, end_date)
+
+
+# ================= GET BY ID (NEW - FIX FOR BROWSER) =================
+@router.get("/{txn_id}", response_model=schemas.TransactionResponse)
+def get_transaction_by_id(
+    txn_id: int,
+    role: str = Depends(get_role),
+    db: Session = Depends(get_db)
+):
+    require_any_role(role)
+
+    txn = db.query(crud.models.Transaction).filter(crud.models.Transaction.id == txn_id).first()
+
+    if not txn:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+
+    return txn
 
 
 # ================= UPDATE =================
@@ -59,10 +65,6 @@ def update_transaction(
     role: str = Depends(get_role),
     db: Session = Depends(get_db)
 ):
-    """
-    Update an existing transaction.
-    Accessible only by Admin.
-    """
     require_admin(role)
 
     updated = crud.update_transaction(db, txn_id, txn)
@@ -79,10 +81,6 @@ def delete_transaction(
     role: str = Depends(get_role),
     db: Session = Depends(get_db)
 ):
-    """
-    Delete a transaction by ID.
-    Accessible only by Admin.
-    """
     require_admin(role)
 
     deleted = crud.delete_transaction(db, txn_id)
