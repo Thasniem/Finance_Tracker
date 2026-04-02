@@ -187,3 +187,12 @@ Tested using Swagger and Postman
 ## Conclusion
 
 This project demonstrates a clean and structured backend system with proper API design, validation, and role-based access control. It reflects strong understanding of Python backend development, database handling, and real-world application logic.
+
+## Author
+
+Developed independently as a complete end-to-end implementation.
+
+- Name: Thasniem Fathima J
+- GitHub: https://github.com/Thasniem
+- LinkedIn: https://www.linkedin.com/in/thasniem-fathima-engineering-student
+- Email: thfjd7865@gmail.com
