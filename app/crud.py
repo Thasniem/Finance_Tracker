@@ -5,6 +5,7 @@ from app import models
 # ================= USERS =================
 
 def create_user(db: Session, user):
+    """Create a new user"""
     db_user = models.User(**user.dict())
     db.add(db_user)
     db.commit()
@@ -13,12 +14,14 @@ def create_user(db: Session, user):
 
 
 def get_users(db: Session):
+    """Get all users"""
     return db.query(models.User).all()
 
 
 # ================= TRANSACTIONS =================
 
 def create_transaction(db: Session, transaction, user_id: int):
+    """Create a transaction linked to a user"""
     db_txn = models.Transaction(**transaction.dict(), user_id=user_id)
     db.add(db_txn)
     db.commit()
@@ -27,6 +30,7 @@ def create_transaction(db: Session, transaction, user_id: int):
 
 
 def get_transactions(db: Session, type=None, category=None, start_date=None, end_date=None):
+    """Fetch transactions with optional filters"""
     query = db.query(models.Transaction)
 
     if type:
@@ -42,6 +46,7 @@ def get_transactions(db: Session, type=None, category=None, start_date=None, end
 
 
 def update_transaction(db: Session, txn_id: int, txn_data):
+    """Update a transaction"""
     txn = db.query(models.Transaction).filter(models.Transaction.id == txn_id).first()
 
     if not txn:
@@ -56,6 +61,7 @@ def update_transaction(db: Session, txn_id: int, txn_data):
 
 
 def delete_transaction(db: Session, txn_id: int):
+    """Delete a transaction"""
     txn = db.query(models.Transaction).filter(models.Transaction.id == txn_id).first()
 
     if not txn:

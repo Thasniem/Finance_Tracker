@@ -14,11 +14,11 @@ from app.utils.role_checker import (
 router = APIRouter(prefix="/transactions", tags=["Transactions"])
 
 
-# CREATE → Admin + Analyst
+# ================= CREATE =================
 @router.post("/", response_model=schemas.TransactionResponse)
 def create_transaction(
     txn: schemas.TransactionCreate,
-    user_id: int,
+    user_id: int = Query(..., description="User ID for the transaction"),
     role: str = Depends(get_role),
     db: Session = Depends(get_db)
 ):
@@ -30,11 +30,11 @@ def create_transaction(
     return crud.create_transaction(db, txn, user_id)
 
 
-# GET (FILTERING) → All roles
+# ================= GET (FILTERED) =================
 @router.get("/", response_model=list[schemas.TransactionResponse])
 def get_transactions(
-    type: str | None = Query(None),
-    category: str | None = Query(None),
+    type: str | None = Query(None, description="Transaction type (income/expense)"),
+    category: str | None = Query(None, description="Transaction category"),
     start_date: date | None = Query(None),
     end_date: date | None = Query(None),
     role: str = Depends(get_role),
@@ -45,12 +45,13 @@ def get_transactions(
     - type
     - category
     - date range
+    Accessible by all roles.
     """
     require_any_role(role)
     return crud.get_transactions(db, type, category, start_date, end_date)
 
 
-# UPDATE → Admin only
+# ================= UPDATE =================
 @router.put("/{txn_id}", response_model=schemas.TransactionResponse)
 def update_transaction(
     txn_id: int,
@@ -71,7 +72,7 @@ def update_transaction(
     return updated
 
 
-# DELETE → Admin only
+# ================= DELETE =================
 @router.delete("/{txn_id}")
 def delete_transaction(
     txn_id: int,
