@@ -40,7 +40,7 @@ def get_transactions(
     return crud.get_transactions(db, type, category, start_date, end_date)
 
 
-# ================= GET BY ID (NEW - FIX FOR BROWSER) =================
+# ================= GET BY ID  =================
 @router.get("/{txn_id}", response_model=schemas.TransactionResponse)
 def get_transaction_by_id(
     txn_id: int,

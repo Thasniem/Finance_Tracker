@@ -5,7 +5,7 @@ from typing import Optional
 VALID_TYPES = ["income", "expense"]
 
 
-# 👤 USER SCHEMAS
+# USER SCHEMAS
 class UserCreate(BaseModel):
     name: str
     email: str
@@ -22,7 +22,7 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
-# 💰 TRANSACTION CREATE
+# TRANSACTION CREATE
 class TransactionCreate(BaseModel):
     amount: float
     type: str
@@ -43,7 +43,7 @@ class TransactionCreate(BaseModel):
         return v.lower()
 
 
-# 🔄 TRANSACTION UPDATE
+# TRANSACTION UPDATE
 class TransactionUpdate(BaseModel):
     amount: Optional[float] = None
     type: Optional[str] = None
@@ -64,7 +64,7 @@ class TransactionUpdate(BaseModel):
         return v.lower() if v else v
 
 
-# 📤 RESPONSE
+# RESPONSE
 class TransactionResponse(BaseModel):
     id: int
     amount: float
